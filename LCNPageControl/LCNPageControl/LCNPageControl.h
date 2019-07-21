@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger numberOfPages;
 @property (nonatomic, assign) NSInteger currentPage;
 
+/** 当numberOfPages < minChangeCount 时 不改变每个圆点的大小 默认为5 */
+@property (nonatomic, assign) NSInteger minChangeCount;
+
 @end
 
 NS_ASSUME_NONNULL_END

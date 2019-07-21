@@ -26,6 +26,7 @@
         self.showsVerticalScrollIndicator = NO;
         self.showsHorizontalScrollIndicator = NO;
         
+        self.minChangeCount = 5;
     }
     return self;
 }
@@ -36,14 +37,19 @@
     
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    LCNPageControlCell *preView = nil;
-    CGFloat margin = 4;
-    
-    self.isChangeSize = numberOfPages > 5;
+    self.isChangeSize = numberOfPages > self.minChangeCount;
     NSMutableArray *viewArrM = [NSMutableArray array];
+    
+    self.contentSize = CGSizeMake(numberOfPages * 10 - 4 + 10, 0);
+    CGFloat viewWith = self.bounds.size.width > 0 ? self.bounds.size.width : 56;
+    CGFloat viewHeight = self.bounds.size.height > 0 ? self.bounds.size.height : 20;
+    BOOL isCanScoll = viewWith <= self.contentSize.width;
+    CGFloat leftMargin = 5 + (isCanScoll ? 0 : (viewWith - self.contentSize.width) * 0.5);
+    
     for (NSInteger i = 0; i < numberOfPages; i++) {
         
         LCNPageControlCell *blackView = [[LCNPageControlCell alloc] init];
+        blackView.frame = CGRectMake(leftMargin + 10 * i, (viewHeight - 6) * 0.5, 6, 6);
         [self addSubview:blackView];
         [viewArrM addObject:blackView];
         
@@ -51,29 +57,6 @@
             blackView.selected = YES;
         } else {
             blackView.selected = NO;
-        }
-        
-        // 约束条件
-        if (!preView) {
-            [blackView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(5);
-                make.centerY.mas_equalTo(0);
-                make.width.height.mas_equalTo(6);
-            }];
-            
-        } else if (i == numberOfPages - 1) {
-            [blackView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(preView.mas_right).offset(margin);
-                make.centerY.mas_equalTo(0);
-                make.right.mas_equalTo(-5);
-                make.width.height.mas_equalTo(6);
-            }];
-        } else {
-            [blackView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(preView.mas_right).offset(margin);
-                make.centerY.mas_equalTo(0);
-                make.width.height.mas_equalTo(6);;
-            }];
         }
         
         if (self.isChangeSize) {
@@ -84,9 +67,8 @@
                 blackView.selectWidth = 4;
             }
         }
-        
-        preView = blackView;
     }
+    
     [self layoutIfNeeded];
 }
 

@@ -10,6 +10,7 @@
 #import "LCNPageControl.h"
 #import "Masonry/Masonry.h"
 
+#define kImageCount 6
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -28,14 +29,14 @@
     [self.pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(0);
         make.top.equalTo(self.collectionView.mas_bottom).offset(10);
-        make.width.mas_equalTo(52);
+        make.width.mas_equalTo(56);
         make.height.mas_equalTo(20);
     }];
 }
 
 #pragma mark - collectionView delegate and datasource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 10;
+    return kImageCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -69,6 +70,7 @@
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.pagingEnabled = YES;
+        _collectionView.backgroundColor = [UIColor whiteColor];
         
         [_collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
     }
@@ -78,7 +80,7 @@
 - (LCNPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[LCNPageControl alloc] init];
-        _pageControl.numberOfPages = 10;
+        _pageControl.numberOfPages = kImageCount;
     }
     return _pageControl;
 }
